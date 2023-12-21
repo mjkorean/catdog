@@ -65,7 +65,7 @@ public class MailController {
             mailService.sendMail(notiEmail);
 
             System.out.println("이메일이 성공적으로 전송되었습니다.");
-            return new ResponseEntity<>("이메일이 성공적으로 전송되었습니다.", HttpStatus.OK);
+            return new ResponseEntity<>(tempPassword.toString(), HttpStatus.OK);
         } catch (Exception e) {
             e.printStackTrace();
             System.out.println("서버 오류가 발생했습니다.");
@@ -84,7 +84,7 @@ public class MailController {
                 mailService.sendMail(notiEmail);
 
                 System.out.println("이메일이 성공적으로 전송되었습니다.");
-                return new ResponseEntity<>("이메일이 성공적으로 전송되었습니다.", HttpStatus.OK);
+                return new ResponseEntity<>(id, HttpStatus.OK);
             } else {
                 System.out.println("해당 이메일이 계정에 없습니다.");
                 return new ResponseEntity<>("해당 이메일이 계정에 없습니다.", HttpStatus.NOT_FOUND);
@@ -114,7 +114,7 @@ public class MailController {
                 mailService.sendMail(notiEmail);
 
                 System.out.println("이메일이 성공적으로 전송되었습니다.");
-                return new ResponseEntity<>("이메일이 성공적으로 전송되었습니다.", HttpStatus.OK);
+                return new ResponseEntity<>(verificationCode.toString(), HttpStatus.OK);
             }
         } catch (Exception e) {
             e.printStackTrace();
