@@ -4,6 +4,7 @@ package com.kosta.catdog.service;
 import java.util.Optional;
 
 import com.kosta.catdog.entity.User;
+import org.springframework.http.ResponseEntity;
 
 public interface UserService {
 	// 회원가입
@@ -41,4 +42,9 @@ public interface UserService {
 	// 사용자 번호(PK)로 사용자 찾기
 	User findByNum(Integer num) throws Exception;
 
+	// ID 비교
+	Boolean idcomparison(String tid, String iid) throws Exception;
+
+	// Password 비교
+	ResponseEntity<String> pwcomparison(User tuser, User iuser) throws Exception;
 }
