@@ -36,5 +36,8 @@ public interface ShopService {
 	Shop addShopImg(Shop shop, List<MultipartFile> file) throws Exception;
 	
 	void desreg(Designer des) throws Exception;
+	
+	// 샵 삭제
+	void deleteShop(String sId) throws Exception;
 
 }

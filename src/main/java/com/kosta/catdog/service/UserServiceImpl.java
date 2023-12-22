@@ -96,11 +96,6 @@ public boolean login(String id, String password) {
 	}
 
 	@Override
-	public void withdrawalUser(User user) throws Exception {
-		// 작성 보류
-	}
-
-	@Override
 	public User modifyNickname(Integer num, String nickname) throws Exception {
 		userDslRepository.modifyNickname(num, nickname);
 		return userRepository.findById(num).get();
