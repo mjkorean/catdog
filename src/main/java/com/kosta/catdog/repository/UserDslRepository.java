@@ -175,6 +175,17 @@ public class UserDslRepository {
         entityManager.clear();
     }
 
+    @Transactional
+    public void withdrawalUser(User u){
+        QUser user = QUser.user;
+        jpaQueryFactory.update(user)
+                .set(user.state, "false")
+                .where(user.id.eq(u.getId()))
+                .execute();
+        entityManager.flush();
+        entityManager.clear();
+    }
+
     public UserGallery findUserGallery(Integer num) {
         QUserGallery userGallery = QUserGallery.userGallery;
         return jpaQueryFactory.selectFrom(userGallery)
