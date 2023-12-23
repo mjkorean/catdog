@@ -23,45 +23,58 @@ import java.util.Date;
 public class OAuth2LoginSuccessHandler implements AuthenticationSuccessHandler {
 
 
-	private ObjectMapper om = new ObjectMapper();
+    private ObjectMapper om = new ObjectMapper();
 
-	@Override
-	public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-			Authentication authentication) throws IOException, ServletException {
+    @Override
+    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
+                                        Authentication authentication) throws IOException, ServletException {
 
-		System.out.println("OAuth2LoginSuccessHandler 진입");
-		PrincipalDetails principalDetails = (PrincipalDetails)authentication.getPrincipal();
+        System.out.println("OAuth2LoginSuccessHandler 진입");
+        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
 
-		 User user = principalDetails.getUser();
-		System.out.println("User : " + user);
-		 if(user.getPassword()==null){
-			 response.setCharacterEncoding("UTF-8");
-			 user.setNickname(URLEncoder.encode(user.getNickname(),"UTF-8"));
-			 String userInfo = om.writeValueAsString(user);
+        User user = principalDetails.getUser();
+        System.out.println("User : " + user);
+        if (user.getPassword() == null) {
+            response.setCharacterEncoding("UTF-8");
+            user.setNickname(URLEncoder.encode(user.getNickname(), "UTF-8"));
+            String userInfo = om.writeValueAsString(user);
 
-			 String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/catdog/oauthjoin/"+userInfo)
-					 .build().toUriString();
-			 System.out.println("targetUrl : " + targetUrl);
-			 response.sendRedirect(targetUrl);
-			 return;
-		 }
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/catdog/oauthjoin/" + userInfo)
+                    .build().toUriString();
+            System.out.println("targetUrl : " + targetUrl);
+            response.sendRedirect(targetUrl);
+            return;
+        }
 
-		String jwtToken = JWT.create()
-				.withSubject(principalDetails.getUsername())
-				.withExpiresAt(new Date(System.currentTimeMillis()+JwtProperties.EXPIRATION_TIME))
-				.withClaim("id", principalDetails.getUser().getId())
-				.withClaim("nickname", principalDetails.getUser().getNickname())
-				.withClaim("email",principalDetails.getUser().getEmail())
-				.sign(Algorithm.HMAC512(JwtProperties.SECRET));
-		System.out.println("Token : " + jwtToken);
+        if (user.getState().equals("1")) {
+            String jwtToken = JWT.create()
+                    .withSubject(principalDetails.getUsername())
+                    .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
+                    .withClaim("id", principalDetails.getUser().getId())
+                    .withClaim("nickname", principalDetails.getUser().getNickname())
+                    .withClaim("email", principalDetails.getUser().getEmail())
+                    .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+            System.out.println("Token : " + jwtToken);
 
-		response.setCharacterEncoding("UTF-8");
-		String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/catdog/oauth/redirect/"+JwtProperties.TOKEN_PREFIX+jwtToken)
-				.build().toUriString();
+            response.setCharacterEncoding("UTF-8");
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/catdog/oauth/redirect/" + JwtProperties.TOKEN_PREFIX + jwtToken)
+                    .build().toUriString();
 
-		response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX+jwtToken);
-		response.sendRedirect(targetUrl);
+            response.addHeader(JwtProperties.HEADER_STRING, JwtProperties.TOKEN_PREFIX + jwtToken);
+            response.sendRedirect(targetUrl);
 
-		System.out.println("targetUrl : " + targetUrl);
-	}
+            System.out.println("targetUrl : " + targetUrl);
+        }
+        else if(user.getState().equals("false")){
+            // 회원상태가 1이 아닌 즉 활성화 된 회원이 아닌경우
+            response.setCharacterEncoding("UTF-8");
+            String exit = "exit";
+            String targetUrl = UriComponentsBuilder.fromUriString("http://localhost:3000/catdog/oauthexit/"+ exit)
+                    .build().toUriString();
+            response.sendRedirect(targetUrl);
+            return;
+        }
+    }
+
+
 }
