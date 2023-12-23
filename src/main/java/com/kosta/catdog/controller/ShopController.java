@@ -3,21 +3,20 @@ package com.kosta.catdog.controller;
 import java.math.BigDecimal;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import com.querydsl.core.Tuple;
 
 import javax.servlet.http.HttpServletResponse;
 
-import com.kosta.catdog.service.DesignerService;
-import net.bytebuddy.description.type.TypeDescription;
-import net.bytebuddy.description.type.TypeList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.parameters.P;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.kosta.catdog.entity.Designer;
@@ -26,11 +25,13 @@ import com.kosta.catdog.entity.Review;
 import com.kosta.catdog.entity.Shop;
 import com.kosta.catdog.entity.User;
 import com.kosta.catdog.repository.DesignerRepository;
+import com.kosta.catdog.repository.ShopDslRepository;
 import com.kosta.catdog.repository.ShopRepository;
 import com.kosta.catdog.repository.UserDslRepository;
+import com.kosta.catdog.service.DesignerService;
 import com.kosta.catdog.service.ShopService;
 import com.kosta.catdog.service.UserService;
-import javax.servlet.http.HttpServletResponse;
+import com.querydsl.core.Tuple;
 
 @RestController
 public class ShopController {
@@ -48,6 +49,8 @@ public class ShopController {
 
     @Autowired
     private DesignerService designerService;
+    @Autowired
+    ShopDslRepository shopDslRepository;
 
 
     //샵사진조회	
@@ -401,6 +404,14 @@ public class ShopController {
             e.printStackTrace();
         }
     }
-
-
+    
+    // 샵 삭제
+    @PostMapping("/deleteshop")
+    public void deleteShop(@RequestParam("sId") String sId) {
+        try {
+        	shopService.deleteShop(sId);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 }

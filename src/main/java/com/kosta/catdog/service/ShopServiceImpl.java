@@ -212,6 +212,15 @@ try {
 		return shopDslRepository.fidnByNum(num);
 	}
 
+	@Override
+	public void deleteShop(String sId) throws Exception {
+		shopDslRepository.deleteDesignerSid(sId);
+		shopDslRepository.deleteShopfile(sId);
+		shopDslRepository.deleteShop(sId);		
+	}
+	
+	
+
 //	@Override
 //	public void fileView(Integer num, OutputStream out) throws Exception {
 //		try {
