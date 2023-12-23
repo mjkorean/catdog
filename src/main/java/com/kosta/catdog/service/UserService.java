@@ -27,6 +27,8 @@ public interface UserService {
 	String findId(String email) throws Exception;
 	// 비밀번호 찾기
 	User findPassword() throws Exception;
+	// 회원탈퇴
+	void withdrawalUser(User user) throws Exception;
 	// 닉네임 변경
 	User modifyNickname(Integer num, String nickname) throws Exception;
 	// 전화번호 변경
